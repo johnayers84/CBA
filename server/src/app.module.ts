@@ -14,6 +14,7 @@ import { TeamsModule } from './teams/teams.module';
 import { SubmissionsModule } from './submissions/submissions.module';
 import { ScoresModule } from './scores/scores.module';
 import { ResultsModule } from './results/results.module';
+import { JudgingModule } from './judging/judging.module';
 import { AuditLogsModule } from './audit-logs/audit-logs.module';
 import { ResponseEnvelopeInterceptor } from './common/interceptors/response-envelope.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
@@ -38,6 +39,7 @@ import databaseConfig from './config/database.config';
     SubmissionsModule,
     ScoresModule,
     ResultsModule,
+    JudgingModule,
     AuditLogsModule,
   ],
   providers: [

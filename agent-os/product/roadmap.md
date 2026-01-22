@@ -4,11 +4,11 @@
 
 | Phase | Complete | Partial | Remaining | Progress |
 |-------|----------|---------|-----------|----------|
-| Phase 0 - Single-Node Prototype | 6 | 1 | 6 | 50% |
+| Phase 0 - Single-Node Prototype | 9 | 1 | 3 | 77% |
 | Phase 1 - Production MVP | 3 | 1 | 6 | 35% |
 | Phase 2 - Event Operations Polish | 0 | 0 | 9 | 0% |
 | Phase 3 - Hardening | 0 | 0 | 10 | 0% |
-| **Total** | **9** | **2** | **31** | **26%** |
+| **Total** | **12** | **1** | **29** | **36%** |
 
 *Last updated: 2026-01-22*
 
@@ -22,8 +22,8 @@
 2. [x] Event Setup API - Create NestJS modules for event CRUD, category management, criteria configuration, scoring scales, and weight definitions with full validation `M`
    - *Completed: events, categories, criteria modules with full CRUD, bulk operations, and validation*
 
-3. [~] Team Registration System - Build registration endpoints, team code generation (Aztec/PDF417 with HMAC signatures), and code verification logic `S`
-   - *Partial: teams module with CRUD and basic barcode generation (AZTEC-{hex}); HMAC signatures NOT implemented*
+3. [x] Team Registration System - Build registration endpoints, team code generation (Aztec/PDF417 with HMAC signatures), and code verification logic `S`
+   - *Completed: teams module with CRUD, HMAC-signed barcode generation (eventId:teamId:timestamp:signature), verification endpoint, and legacy format support; 23 unit tests*
 
 4. [x] Submission and Turn-in API - Implement submission bulk-creation, turn-in scanning with ownership verification, status transitions, and audit logging `M`
    - *Completed: submissions module with workflow endpoints (turn-in, start-judging, finalize) and status validation*
@@ -31,8 +31,8 @@
 5. [x] Judge Table Configuration - Create table setup endpoints, seat management, QR join token generation with signatures, and table assignment plan generation `S`
    - *Completed: tables and seats modules with QR token generation (64-char hex) and regenerate-token endpoint*
 
-6. [ ] Seat Sequence Algorithm - Implement deterministic passing-order algorithm for taste/texture phase matching physical distribution patterns, with comprehensive unit tests `M`
-   - *Not started: No rotation/passing algorithm exists; seats are static positional identifiers only*
+6. [x] Seat Sequence Algorithm - Implement deterministic passing-order algorithm for taste/texture phase matching physical distribution patterns, with comprehensive unit tests `M`
+   - *Completed: JudgingModule with seat-sequence.helper.ts, assignment plan generation, and next submission routing; 28 unit tests*
 
 7. [x] Judge Authentication Flow - Build table QR scanning, seat selection, JWT token issuance with seat binding, and token refresh mechanisms `S`
    - *Completed: seat-token authentication via QR validation with JWT issuance (90-min expiry)*
@@ -40,8 +40,8 @@
 8. [x] Judge Scoring API - Implement score submission with idempotency keys, phase enforcement, seat validation, and batch sync for offline queue flush `M`
    - *Completed: scores module with validation against event scale (min/max/step), phases support*
 
-9. [ ] Score Calculation Engine - Build aggregation logic with configurable mean/trimmed mean, criterion weighting, category weighting, and ranking computation `M`
-   - *Not started: AggregationMethod enum exists but no calculation logic implemented*
+9. [x] Score Calculation Engine - Build aggregation logic with configurable mean/trimmed mean, criterion weighting, category weighting, and ranking computation `M`
+   - *Completed: ResultsService with mean/trimmed_mean aggregation, weighted scoring, tie-aware rankings, overall team rankings, and completion status tracking; 56 unit + integration tests*
 
 10. [ ] React PWA Foundation - Set up mobile-first React PWA with service worker, manifest, IndexedDB offline storage, and sync status indicators `M`
     - *Not started: client/ directory is empty placeholder*
@@ -52,8 +52,8 @@
 12. [ ] Judge UI - Create guided scoring interface with automatic next-submission flow, appearance and taste/texture phases, and offline queue management `L`
     - *Not started: Requires React PWA Foundation*
 
-13. [ ] Results and Basic Reports - Implement results API, category/overall rankings display, and basic team report generation `M`
-    - *Not started: No results module, no ranking endpoints, requires Score Calculation Engine*
+13. [~] Results and Basic Reports - Implement results API, category/overall rankings display, and basic team report generation `M`
+    - *Partial: Results API complete with 3 endpoints (submission/category/event results); basic team report generation NOT implemented*
 
 ## Phase 1 - Production MVP (High Availability)
 
@@ -145,10 +145,9 @@
 
 | Priority | Item | Description | Effort |
 |----------|------|-------------|--------|
-| 1 | Score Calculation Engine (#9) | Implement aggregation service with mean/trimmed_mean calculations | M |
-| 2 | Results API (#13) | Build results endpoints using calculation engine | M |
-| 3 | Seat Sequence Algorithm (#6) | Implement judge rotation/passing order algorithm | M |
-| 4 | HMAC Signatures (#3) | Add cryptographic signatures to team barcodes | S |
+| ~~1~~ | ~~Seat Sequence Algorithm (#6)~~ | ~~Implement judge rotation/passing order algorithm~~ | ~~M~~ |
+| ~~2~~ | ~~HMAC Signatures (#3)~~ | ~~Add cryptographic signatures to team barcodes~~ | ~~S~~ |
+| 1 | Team Report Generation (#13) | Complete basic team report display/generation | S |
 
 ### Frontend (Client) - Remaining Items
 
@@ -161,19 +160,16 @@
 ### Recommended Execution Order
 
 ```
-Backend First (enables frontend development):
-  #9 Score Calculation Engine
+Backend (remaining):
+  #6 Seat Sequence Algorithm ✅
       |
       v
-  #13 Results API
+  #3 HMAC Signatures ✅
       |
       v
-  #6 Seat Sequence Algorithm (can parallel with #13)
-      |
-      v
-  #3 HMAC Signatures (can parallel)
+  #13 Team Report Generation (NEXT)
 
-Frontend (can start after #9/#13):
+Frontend (can start now - Results API is complete):
   #10 React PWA Foundation
       |
       v

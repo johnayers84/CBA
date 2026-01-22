@@ -14,7 +14,14 @@ import {
   Request,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
-import { CreateTeamDto, CreateTeamsDto, UpdateTeamDto, TeamResponseDto } from './dto';
+import {
+  CreateTeamDto,
+  CreateTeamsDto,
+  UpdateTeamDto,
+  TeamResponseDto,
+  VerifyBarcodeDto,
+  VerifyBarcodeResponseDto,
+} from './dto';
 import { SoftDeleteQueryDto } from '../common/dto';
 import { JwtAuthGuard, RolesGuard } from '../common/guards';
 import { Roles } from '../common/decorators';
@@ -112,5 +119,18 @@ export class TeamsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     await this.teamsService.remove(id);
+  }
+
+  /**
+   * Verify a scanned barcode.
+   * POST /teams/verify-barcode
+   *
+   * Validates the HMAC signature and returns team information if valid.
+   */
+  @Post('teams/verify-barcode')
+  @HttpCode(HttpStatus.OK)
+  async verifyBarcode(@Body() dto: VerifyBarcodeDto): Promise<VerifyBarcodeResponseDto> {
+    const result = await this.teamsService.verifyBarcode(dto.payload, dto.eventId);
+    return VerifyBarcodeResponseDto.fromVerification(result.valid, result.team, result.error);
   }
 }

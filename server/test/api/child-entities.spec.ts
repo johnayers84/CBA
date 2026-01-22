@@ -12,6 +12,17 @@ import { SeatsService } from '../../src/seats/seats.service';
 import { CategoriesService } from '../../src/categories/categories.service';
 import { CriteriaService } from '../../src/criteria/criteria.service';
 import { TeamsService } from '../../src/teams/teams.service';
+import { ConfigService } from '@nestjs/config';
+
+/**
+ * Mock ConfigService for tests.
+ */
+const mockConfigService = {
+  get: (key: string) => {
+    if (key === 'BARCODE_SECRET') return 'test-barcode-secret';
+    return undefined;
+  },
+} as ConfigService;
 
 /**
  * Test DataSource for child entity service tests.
@@ -58,7 +69,7 @@ describe('Child Entity Service Tests (Task 6.1)', () => {
     seatsService = new SeatsService(seatRepo, tableRepo);
     categoriesService = new CategoriesService(categoryRepo, eventRepo);
     criteriaService = new CriteriaService(criterionRepo, eventRepo);
-    teamsService = new TeamsService(teamRepo, eventRepo);
+    teamsService = new TeamsService(teamRepo, eventRepo, mockConfigService);
   });
 
   afterAll(async () => {
@@ -177,7 +188,10 @@ describe('Child Entity Service Tests (Task 6.1)', () => {
       expect(teams).toHaveLength(3);
       expect(teams.map((t) => t.name)).toEqual(['Smoke Masters', 'BBQ Kings', 'Grill Wizards']);
       teams.forEach((team) => {
-        expect(team.barcodePayload).toMatch(/^AZTEC-[A-F0-9]{32}$/);
+        // New HMAC format: {eventId}:{teamId}:{timestamp}:{signature}
+        expect(team.barcodePayload).toMatch(
+          /^[0-9a-f-]{36}:[0-9a-f-]{36}:\d+:[0-9a-f]{16}$/,
+        );
         expect(team.codeInvalidatedAt).toBeNull();
       });
     });

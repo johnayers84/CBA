@@ -1,0 +1,25 @@
+task_groups:
+  - name: Database Configuration and Base Setup
+    claude_code_subagent: implementer
+    standards:
+      - all
+  - name: Independent Entity Creation
+    claude_code_subagent: implementer
+    standards:
+      - all
+  - name: Event Child Entities
+    claude_code_subagent: implementer
+    standards:
+      - all
+  - name: Submission and Score Entities
+    claude_code_subagent: implementer
+    standards:
+      - all
+  - name: Audit Log Implementation
+    claude_code_subagent: implementer
+    standards:
+      - all
+  - name: Integration Tests and Test Utilities
+    claude_code_subagent: implementer
+    standards:
+      - all

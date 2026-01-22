@@ -1,0 +1,50 @@
+task_groups:
+  - name: API Infrastructure & Configuration
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: User JWT Authentication
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Judge Seat-Token Authentication
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Authorization Guards
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: User & Event Management Endpoints
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Event Child Entity Endpoints
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Submission Workflow Endpoints
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Score Recording Endpoints
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Audit Log Endpoints
+    claude_code_subagent: implementer
+    standards:
+      - global/*
+
+  - name: Test Review & Gap Analysis
+    claude_code_subagent: implementer
+    standards:
+      - global/*

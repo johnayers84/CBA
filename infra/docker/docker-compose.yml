@@ -1,0 +1,89 @@
+# Production Docker Compose
+# This is the base configuration - will be extended for HA setup
+# Usage: docker compose -f infra/docker/docker-compose.yml up -d
+
+version: '3.8'
+
+services:
+  # =============================================================================
+  # PostgreSQL Database
+  # In production, this will be replaced by Patroni HA cluster
+  # =============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: cba-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - cba-internal
+
+  # =============================================================================
+  # Server (NestJS API)
+  # =============================================================================
+  server:
+    build:
+      context: ../../server
+      dockerfile: Dockerfile
+    container_name: cba-server
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      SEAT_TOKEN_EXPIRES_IN: ${SEAT_TOKEN_EXPIRES_IN:-90m}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    networks:
+      - cba-internal
+      - cba-external
+
+  # =============================================================================
+  # Client (React PWA) - Static file server
+  # Will be added when client is built
+  # =============================================================================
+  # client:
+  #   build:
+  #     context: ../../client
+  #     dockerfile: Dockerfile
+  #   container_name: cba-client
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - server
+  #   restart: always
+  #   networks:
+  #     - cba-external
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  cba-internal:
+    driver: bridge
+    internal: true
+  cba-external:
+    driver: bridge

@@ -8,7 +8,7 @@ import { Team } from '../../src/entities/team.entity';
 import { Submission, SubmissionStatus } from '../../src/entities/submission.entity';
 import { Table } from '../../src/entities/table.entity';
 import { Seat } from '../../src/entities/seat.entity';
-import { Score } from '../../src/entities/score.entity';
+import { Score, ScoringPhase } from '../../src/entities/score.entity';
 import { entities } from '../../src/entities';
 import { TeamsService } from '../../src/teams/teams.service';
 import { JudgingService } from '../../src/judging/judging.service';
@@ -264,7 +264,7 @@ describe('Full Workflow Integration Tests', () => {
           categoryId: testCategory.id,
           teamId: team.id,
           submissionNumber: i + 1,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         })),
       );
     });
@@ -384,7 +384,7 @@ describe('Full Workflow Integration Tests', () => {
         submissionId: testSubmissions[0].id,
         seatId: testSeats[0].id,
         criterionId: testCriteria[0].id,
-        phase: 'appearance',
+        phase: ScoringPhase.APPEARANCE,
         scoreValue: 8.0,
       });
 
@@ -407,7 +407,7 @@ describe('Full Workflow Integration Tests', () => {
           submissionId: submission.id,
           seatId: testSeats[0].id,
           criterionId: testCriteria[0].id,
-          phase: 'appearance',
+          phase: ScoringPhase.APPEARANCE,
           scoreValue: 8.0,
         });
       }
@@ -436,13 +436,13 @@ describe('Full Workflow Integration Tests', () => {
           categoryId: testCategory.id,
           teamId: testTeams[0].id,
           submissionNumber: 1,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         },
         {
           categoryId: testCategory.id,
           teamId: testTeams[1].id,
           submissionNumber: 2,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         },
       ]);
     });
@@ -456,7 +456,7 @@ describe('Full Workflow Integration Tests', () => {
             submissionId: testSubmissions[0].id,
             seatId: testSeats[judgeIdx].id,
             criterionId: criterion.id,
-            phase: 'taste_texture',
+            phase: ScoringPhase.TASTE_TEXTURE,
             scoreValue: 8.0, // All 8s for simplicity
           });
         }
@@ -479,7 +479,7 @@ describe('Full Workflow Integration Tests', () => {
           submissionId: testSubmissions[0].id,
           seatId: testSeats[judgeIdx].id,
           criterionId: testCriteria[0].id, // Just Appearance
-          phase: 'taste_texture',
+          phase: ScoringPhase.TASTE_TEXTURE,
           scoreValue: judgeScores[judgeIdx],
         });
       }
@@ -501,7 +501,7 @@ describe('Full Workflow Integration Tests', () => {
               submissionId: submission.id,
               seatId: testSeats[judgeIdx].id,
               criterionId: criterion.id,
-              phase: 'taste_texture',
+              phase: ScoringPhase.TASTE_TEXTURE,
               scoreValue: score,
             });
           }
@@ -532,7 +532,7 @@ describe('Full Workflow Integration Tests', () => {
               submissionId: submission.id,
               seatId: testSeats[judgeIdx].id,
               criterionId: criterion.id,
-              phase: 'taste_texture',
+              phase: ScoringPhase.TASTE_TEXTURE,
               scoreValue: 8.0,
             });
           }
@@ -560,13 +560,13 @@ describe('Full Workflow Integration Tests', () => {
           categoryId: category2.id,
           teamId: testTeams[0].id,
           submissionNumber: 1,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         },
         {
           categoryId: category2.id,
           teamId: testTeams[1].id,
           submissionNumber: 2,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         },
       ]);
 
@@ -585,7 +585,7 @@ describe('Full Workflow Integration Tests', () => {
                 submissionId: submissions[subIdx].id,
                 seatId: testSeats[judgeIdx].id,
                 criterionId: criterion.id,
-                phase: 'taste_texture',
+                phase: ScoringPhase.TASTE_TEXTURE,
                 scoreValue: scores[subIdx],
               });
             }
@@ -613,7 +613,7 @@ describe('Full Workflow Integration Tests', () => {
           submissionId: testSubmissions[0].id,
           seatId: testSeats[judgeIdx].id,
           criterionId: testCriteria[0].id, // Only Appearance
-          phase: 'taste_texture',
+          phase: ScoringPhase.TASTE_TEXTURE,
           scoreValue: 8.0,
         });
       }
@@ -621,6 +621,107 @@ describe('Full Workflow Integration Tests', () => {
       const result = await resultsService.getSubmissionResult(testSubmissions[0].id);
 
       expect(result.completionStatus).toBe('partial');
+    });
+  });
+
+  describe('Team Report Workflow', () => {
+    beforeEach(async () => {
+      // Create teams and submissions
+      testTeams = await teamsService.createBulk(testEvent.id, [
+        { name: 'Alpha Team', teamNumber: 1 },
+        { name: 'Beta Team', teamNumber: 2 },
+      ]);
+
+      testSubmissions = await submissionRepo.save([
+        {
+          categoryId: testCategory.id,
+          teamId: testTeams[0].id,
+          submissionNumber: 1,
+          status: SubmissionStatus.TURNED_IN,
+        },
+        {
+          categoryId: testCategory.id,
+          teamId: testTeams[1].id,
+          submissionNumber: 2,
+          status: SubmissionStatus.TURNED_IN,
+        },
+      ]);
+
+      // Score both submissions
+      for (const submission of testSubmissions) {
+        const score = submission.id === testSubmissions[0].id ? 9.0 : 7.0;
+        for (let judgeIdx = 0; judgeIdx < 6; judgeIdx++) {
+          for (const criterion of testCriteria) {
+            await scoreRepo.save({
+              submissionId: submission.id,
+              seatId: testSeats[judgeIdx].id,
+              criterionId: criterion.id,
+              phase: ScoringPhase.TASTE_TEXTURE,
+              scoreValue: score,
+            });
+          }
+        }
+      }
+    });
+
+    it('generates complete team report', async () => {
+      const report = await resultsService.getTeamReport(testEvent.id, testTeams[0].id);
+
+      expect(report.eventId).toBe(testEvent.id);
+      expect(report.eventName).toBe('BBQ Championship 2026');
+      expect(report.teamId).toBe(testTeams[0].id);
+      expect(report.teamName).toBe('Alpha Team');
+      expect(report.teamNumber).toBe(1);
+      expect(report.overallRank).toBe(1); // Higher score = rank 1
+      expect(report.totalTeams).toBe(2);
+      expect(report.categoryResults).toHaveLength(1);
+      expect(report.generatedAt).toBeDefined();
+    });
+
+    it('includes category results with criterion breakdown', async () => {
+      const report = await resultsService.getTeamReport(testEvent.id, testTeams[0].id);
+
+      const categoryResult = report.categoryResults[0];
+      expect(categoryResult.categoryId).toBe(testCategory.id);
+      expect(categoryResult.categoryName).toBe('Brisket');
+      expect(categoryResult.rank).toBe(1);
+      expect(categoryResult.totalEntries).toBe(2);
+      expect(categoryResult.finalScore).toBeCloseTo(9.0, 2);
+      expect(categoryResult.criterionScores).toHaveLength(3);
+      expect(categoryResult.completionStatus).toBe('complete');
+    });
+
+    it('shows correct ranking for lower-ranked team', async () => {
+      const report = await resultsService.getTeamReport(testEvent.id, testTeams[1].id);
+
+      expect(report.teamName).toBe('Beta Team');
+      expect(report.overallRank).toBe(2);
+      expect(report.categoryResults[0].rank).toBe(2);
+      expect(report.categoryResults[0].finalScore).toBeCloseTo(7.0, 2);
+    });
+
+    it('throws error for non-existent team', async () => {
+      await expect(
+        resultsService.getTeamReport(testEvent.id, '00000000-0000-0000-0000-000000000000'),
+      ).rejects.toThrow('Team not found');
+    });
+
+    it('throws error for team from different event', async () => {
+      // Create another event
+      const otherEvent = await eventRepo.save({
+        name: 'Other Event',
+        date: new Date('2026-07-01'),
+        location: 'Dallas, TX',
+        status: EventStatus.ACTIVE,
+        aggregationMethod: AggregationMethod.MEAN,
+        scoreMin: 1,
+        scoreMax: 10,
+        scoreStep: 1,
+      });
+
+      await expect(
+        resultsService.getTeamReport(otherEvent.id, testTeams[0].id),
+      ).rejects.toThrow('Team not found');
     });
   });
 
@@ -648,7 +749,7 @@ describe('Full Workflow Integration Tests', () => {
           categoryId: testCategory.id,
           teamId: team.id,
           submissionNumber: i + 1,
-          status: SubmissionStatus.CHECKED_IN,
+          status: SubmissionStatus.TURNED_IN,
         })),
       );
 
@@ -674,7 +775,7 @@ describe('Full Workflow Integration Tests', () => {
               submissionId: submission.id,
               seatId: testSeats[judgeIdx].id,
               criterionId: criterion.id,
-              phase: 'taste_texture',
+              phase: ScoringPhase.TASTE_TEXTURE,
               scoreValue: Math.min(10, baseScore + variation),
             });
           }

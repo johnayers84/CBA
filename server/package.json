@@ -2,10 +2,10 @@
   "name": "cba-server",
   "version": "1.0.0",
   "description": "BBQ Competition Server - Backend API",
-  "main": "dist/main.js",
+  "main": "dist/src/main.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/main.js",
+    "start": "node dist/src/main.js",
     "start:dev": "ts-node src/main.ts",
     "test": "vitest run",
     "test:watch": "vitest",

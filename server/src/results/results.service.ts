@@ -16,6 +16,8 @@ import {
   RankedSubmissionResultDto,
   EventResultsDto,
   TeamOverallResultDto,
+  TeamReportDto,
+  TeamCategoryResultDto,
 } from './dto';
 import {
   aggregateScores,
@@ -198,6 +200,76 @@ export class ResultsService {
       aggregationMethod: event.aggregationMethod,
       categoryResults,
       overallRankings,
+    };
+  }
+
+  /**
+   * Get a complete report for a specific team.
+   * Includes all category results and overall standing.
+   */
+  async getTeamReport(eventId: string, teamId: string): Promise<TeamReportDto> {
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+        message: 'Event not found',
+      });
+    }
+
+    const team = await this.teamRepository.findOne({
+      where: { id: teamId, eventId },
+    });
+
+    if (!team) {
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+        message: 'Team not found',
+      });
+    }
+
+    // Get full event results to determine rankings
+    const eventResults = await this.getEventResults(eventId);
+
+    // Find this team's overall ranking
+    const teamOverallRanking = eventResults.overallRankings.find(
+      (r) => r.teamId === teamId,
+    );
+
+    // Build category results for this team
+    const categoryResults: TeamCategoryResultDto[] = [];
+
+    for (const catResult of eventResults.categoryResults) {
+      const teamSubmission = catResult.results.find((r) => r.teamId === teamId);
+
+      if (teamSubmission) {
+        categoryResults.push({
+          categoryId: catResult.categoryId,
+          categoryName: catResult.categoryName,
+          submissionId: teamSubmission.submissionId,
+          rank: teamSubmission.rank,
+          totalEntries: catResult.results.length,
+          finalScore: teamSubmission.finalScore,
+          criterionScores: teamSubmission.criterionScores,
+          completionStatus: teamSubmission.completionStatus,
+        });
+      }
+    }
+
+    return {
+      eventId: event.id,
+      eventName: event.name,
+      teamId: team.id,
+      teamName: team.name,
+      teamNumber: team.teamNumber,
+      overallRank: teamOverallRanking?.rank ?? 0,
+      totalTeams: eventResults.overallRankings.length,
+      rankSum: teamOverallRanking?.rankSum ?? 0,
+      totalScore: teamOverallRanking?.totalScore ?? 0,
+      categoryResults,
+      generatedAt: new Date().toISOString(),
     };
   }
 

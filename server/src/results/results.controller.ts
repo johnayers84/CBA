@@ -4,6 +4,7 @@ import {
   SubmissionResultDto,
   CategoryResultsDto,
   EventResultsDto,
+  TeamReportDto,
 } from './dto';
 import { JwtAuthGuard } from '../common/guards';
 
@@ -48,5 +49,19 @@ export class ResultsController {
     @Param('eventId', ParseUUIDPipe) eventId: string,
   ): Promise<EventResultsDto> {
     return this.resultsService.getEventResults(eventId);
+  }
+
+  /**
+   * Get a complete report for a specific team.
+   * GET /events/:eventId/teams/:teamId/report
+   *
+   * Includes all category results, criterion breakdowns, and overall standing.
+   */
+  @Get('events/:eventId/teams/:teamId/report')
+  async getTeamReport(
+    @Param('eventId', ParseUUIDPipe) eventId: string,
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+  ): Promise<TeamReportDto> {
+    return this.resultsService.getTeamReport(eventId, teamId);
   }
 }

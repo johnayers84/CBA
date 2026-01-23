@@ -4,11 +4,11 @@
 
 | Phase | Complete | Partial | Remaining | Progress |
 |-------|----------|---------|-----------|----------|
-| Phase 0 - Single-Node Prototype | 9 | 1 | 3 | 77% |
+| Phase 0 - Single-Node Prototype | 10 | 0 | 3 | 77% |
 | Phase 1 - Production MVP | 3 | 1 | 6 | 35% |
 | Phase 2 - Event Operations Polish | 0 | 0 | 9 | 0% |
 | Phase 3 - Hardening | 0 | 0 | 10 | 0% |
-| **Total** | **12** | **1** | **29** | **36%** |
+| **Total** | **13** | **0** | **29** | **38%** |
 
 *Last updated: 2026-01-22*
 
@@ -52,8 +52,8 @@
 12. [ ] Judge UI - Create guided scoring interface with automatic next-submission flow, appearance and taste/texture phases, and offline queue management `L`
     - *Not started: Requires React PWA Foundation*
 
-13. [~] Results and Basic Reports - Implement results API, category/overall rankings display, and basic team report generation `M`
-    - *Partial: Results API complete with 3 endpoints (submission/category/event results); basic team report generation NOT implemented*
+13. [x] Results and Basic Reports - Implement results API, category/overall rankings display, and basic team report generation `M`
+    - *Completed: Results API with 4 endpoints including team report (GET /events/:eventId/teams/:teamId/report); full criterion breakdown, category results, and overall standings; 5 integration tests*
 
 ## Phase 1 - Production MVP (High Availability)
 
@@ -141,13 +141,13 @@
 
 ## Next Steps to Complete Phase 0
 
-### Backend (Server) - Remaining Items
+### Backend (Server) - ✅ COMPLETE
 
 | Priority | Item | Description | Effort |
 |----------|------|-------------|--------|
 | ~~1~~ | ~~Seat Sequence Algorithm (#6)~~ | ~~Implement judge rotation/passing order algorithm~~ | ~~M~~ |
 | ~~2~~ | ~~HMAC Signatures (#3)~~ | ~~Add cryptographic signatures to team barcodes~~ | ~~S~~ |
-| 1 | Team Report Generation (#13) | Complete basic team report display/generation | S |
+| ~~3~~ | ~~Team Report Generation (#13)~~ | ~~Complete basic team report display/generation~~ | ~~S~~ |
 
 ### Frontend (Client) - Remaining Items
 
@@ -160,16 +160,12 @@
 ### Recommended Execution Order
 
 ```
-Backend (remaining):
+Backend: ✅ COMPLETE
   #6 Seat Sequence Algorithm ✅
-      |
-      v
   #3 HMAC Signatures ✅
-      |
-      v
-  #13 Team Report Generation (NEXT)
+  #13 Team Report Generation ✅
 
-Frontend (can start now - Results API is complete):
+Frontend (NEXT - Backend API is complete):
   #10 React PWA Foundation
       |
       v

@@ -4,13 +4,13 @@
 
 | Phase | Complete | Partial | Remaining | Progress |
 |-------|----------|---------|-----------|----------|
-| Phase 0 - Single-Node Prototype | 10 | 0 | 3 | 77% |
+| Phase 0 - Single-Node Prototype | 11 | 2 | 0 | 92% |
 | Phase 1 - Production MVP | 3 | 1 | 6 | 35% |
 | Phase 2 - Event Operations Polish | 0 | 0 | 9 | 0% |
 | Phase 3 - Hardening | 0 | 0 | 10 | 0% |
-| **Total** | **13** | **0** | **29** | **38%** |
+| **Total** | **14** | **3** | **25** | **45%** |
 
-*Last updated: 2026-01-22*
+*Last updated: 2026-01-23*
 
 ---
 
@@ -43,14 +43,14 @@
 9. [x] Score Calculation Engine - Build aggregation logic with configurable mean/trimmed mean, criterion weighting, category weighting, and ranking computation `M`
    - *Completed: ResultsService with mean/trimmed_mean aggregation, weighted scoring, tie-aware rankings, overall team rankings, and completion status tracking; 56 unit + integration tests*
 
-10. [ ] React PWA Foundation - Set up mobile-first React PWA with service worker, manifest, IndexedDB offline storage, and sync status indicators `M`
-    - *Not started: client/ directory is empty placeholder*
+10. [x] React PWA Foundation - Set up mobile-first React PWA with service worker, manifest, IndexedDB offline storage, and sync status indicators `M`
+    - *Completed: Vite + React + TypeScript with PWA plugin, IndexedDB offline queue, API client with auto-sync, Zustand auth store, React Router with protected routes; 40 frontend tests*
 
-11. [ ] Admin UI - Build event setup, category configuration, team registration, and turn-in verification screens for operators `L`
-    - *Not started: Requires React PWA Foundation*
+11. [~] Admin UI - Build event setup, category configuration, team registration, and turn-in verification screens for operators `L`
+    - *Partial: Event list, create, detail pages; EventTables with QR codes; EventTeams management; EventSubmissions turn-in workflow; needs category/criteria forms and polish*
 
-12. [ ] Judge UI - Create guided scoring interface with automatic next-submission flow, appearance and taste/texture phases, and offline queue management `L`
-    - *Not started: Requires React PWA Foundation*
+12. [~] Judge UI - Create guided scoring interface with automatic next-submission flow, appearance and taste/texture phases, and offline queue management `L`
+    - *Partial: JudgeDashboard and ScanQR pages exist; needs full scoring flow integration with offline cache*
 
 13. [x] Results and Basic Reports - Implement results API, category/overall rankings display, and basic team report generation `M`
     - *Completed: Results API with 4 endpoints including team report (GET /events/:eventId/teams/:teamId/report); full criterion breakdown, category results, and overall standings; 5 integration tests*
@@ -153,9 +153,9 @@
 
 | Priority | Item | Description | Effort |
 |----------|------|-------------|--------|
-| 1 | React PWA Foundation (#10) | Set up React + Vite + PWA with offline support | M |
-| 2 | Judge UI (#12) | Scoring interface with offline queue | L |
-| 3 | Admin UI (#11) | Event setup and management screens | L |
+| ~~1~~ | ~~React PWA Foundation (#10)~~ | ~~Set up React + Vite + PWA with offline support~~ | ~~M~~ |
+| 1 | Judge UI (#12) | Complete scoring flow with offline queue | M |
+| 2 | Admin UI (#11) | Add category/criteria forms, polish | S |
 
 ### Recommended Execution Order
 
@@ -165,9 +165,9 @@ Backend: ✅ COMPLETE
   #3 HMAC Signatures ✅
   #13 Team Report Generation ✅
 
-Frontend (NEXT - Backend API is complete):
-  #10 React PWA Foundation
+Frontend:
+  #10 React PWA Foundation ✅
       |
       v
-  #11 Admin UI  <--parallel-->  #12 Judge UI
+  #11 Admin UI (~80%)  <--parallel-->  #12 Judge UI (~30%)  <-- IN PROGRESS
 ```

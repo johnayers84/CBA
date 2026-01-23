@@ -16,8 +16,9 @@ export default registerAs('database', () => ({
   entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
 
-  // Production safety: never auto-sync schema in production
-  synchronize: process.env.NODE_ENV === 'development',
+  // Schema synchronization - use DB_SYNCHRONIZE=true for initial setup
+  // Production safety: defaults to false in production unless explicitly enabled
+  synchronize: process.env.DB_SYNCHRONIZE === 'true' || process.env.NODE_ENV === 'development',
 
   // Connection pool settings for optimal performance
   extra: {

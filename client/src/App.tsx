@@ -3,7 +3,18 @@ import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { ScanQR } from './pages/ScanQR';
 import { JudgeDashboard } from './pages/JudgeDashboard';
-import { AdminLogin, Events, Teams, Tables, Results } from './pages/admin';
+import {
+  AdminLogin,
+  Events,
+  CreateEvent,
+  EventDetail,
+  EventTeams,
+  EventTables,
+  EventSubmissions,
+  Teams,
+  Tables,
+  Results,
+} from './pages/admin';
 import { useAuthStore } from './stores/authStore';
 import { useEffect } from 'react';
 import { registerSW } from 'virtual:pwa-register';
@@ -88,6 +99,46 @@ function App() {
               element={
                 <AdminRoute>
                   <Events />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="events/new"
+              element={
+                <AdminRoute>
+                  <CreateEvent />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="events/:id"
+              element={
+                <AdminRoute>
+                  <EventDetail />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="events/:id/teams"
+              element={
+                <AdminRoute>
+                  <EventTeams />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="events/:id/tables"
+              element={
+                <AdminRoute>
+                  <EventTables />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="events/:id/submissions"
+              element={
+                <AdminRoute>
+                  <EventSubmissions />
                 </AdminRoute>
               }
             />

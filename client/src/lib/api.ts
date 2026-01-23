@@ -83,7 +83,9 @@ export async function get<T>(url: string): Promise<ApiResponse<T>> {
       };
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    // Unwrap envelope: { success, data } -> data
+    const data = json.data !== undefined ? json.data : json;
     return { data, status: response.status };
   } catch (error) {
     return {
@@ -119,7 +121,9 @@ export async function post<T>(url: string, body?: unknown): Promise<ApiResponse<
       };
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    // Unwrap envelope: { success, data } -> data
+    const data = json.data !== undefined ? json.data : json;
     return { data, status: response.status };
   } catch (error) {
     // Network error - queue for retry
@@ -156,7 +160,9 @@ export async function put<T>(url: string, body?: unknown): Promise<ApiResponse<T
       };
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    // Unwrap envelope: { success, data } -> data
+    const data = json.data !== undefined ? json.data : json;
     return { data, status: response.status };
   } catch (error) {
     const id = await queueRequest({ method: 'PUT', url: `${API_BASE}${url}`, body });
@@ -192,7 +198,9 @@ export async function patch<T>(url: string, body?: unknown): Promise<ApiResponse
       };
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    // Unwrap envelope: { success, data } -> data
+    const data = json.data !== undefined ? json.data : json;
     return { data, status: response.status };
   } catch (error) {
     const id = await queueRequest({ method: 'PATCH', url: `${API_BASE}${url}`, body });
@@ -228,7 +236,9 @@ export async function del<T>(url: string): Promise<ApiResponse<T>> {
     }
 
     // DELETE might not return body
-    const data = await response.json().catch(() => undefined);
+    const json = await response.json().catch(() => undefined);
+    // Unwrap envelope: { success, data } -> data
+    const data = json?.data !== undefined ? json.data : json;
     return { data, status: response.status };
   } catch (error) {
     const id = await queueRequest({ method: 'DELETE', url: `${API_BASE}${url}` });

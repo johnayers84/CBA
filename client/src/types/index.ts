@@ -30,9 +30,9 @@ export interface Event {
   date: string;
   location?: string;
   aggregationMethod: AggregationMethod;
-  scoreMin: number;
-  scoreMax: number;
-  scoreStep: number;
+  scoringScaleMin: number;
+  scoringScaleMax: number;
+  scoringScaleStep: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -104,6 +104,13 @@ export interface Table {
   name?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+/**
+ * Table with seats loaded
+ */
+export interface TableWithSeats extends Table {
+  seats: Seat[];
 }
 
 /**

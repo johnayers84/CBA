@@ -1,0 +1,371 @@
+.event-detail {
+  max-width: 1000px;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.event-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.event-title h1 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+}
+
+.event-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.event-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.info-item label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.info-item span {
+  font-weight: 500;
+}
+
+.event-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  flex: 1;
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Tabs */
+.tab-navigation {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: var(--primary-color);
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+  background: var(--bg-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  font-size: 1.125rem;
+  color: var(--primary-color);
+}
+
+/* Categories List */
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.category-item {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.category-header h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.category-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.category-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.small-button {
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.small-button:hover {
+  background: var(--border-color);
+}
+
+.small-button.danger {
+  color: var(--error-color);
+  border-color: #fecaca;
+}
+
+.small-button.danger:hover {
+  background: #fee2e2;
+}
+
+/* Criteria Table */
+.criteria-table {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.criteria-header,
+.criteria-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 80px 40px;
+  padding: 0.5rem 0.75rem;
+  align-items: center;
+}
+
+.criteria-header {
+  background: var(--bg-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.criteria-row {
+  border-top: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+.phase-tag {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.icon-button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  border-radius: 4px;
+}
+
+.icon-button:hover {
+  background: var(--border-color);
+}
+
+.icon-button.danger:hover {
+  background: #fee2e2;
+  color: var(--error-color);
+}
+
+/* Teams Grid */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.team-card {
+  background: var(--bg-secondary);
+  padding: 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.team-number {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.team-name {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Tables Grid */
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.table-card {
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.table-number {
+  display: block;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.table-name {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.modal-content .form-group {
+  margin-bottom: 1rem;
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .event-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .event-actions {
+    width: 100%;
+  }
+
+  .event-actions button {
+    flex: 1;
+  }
+
+  .event-stats {
+    flex-direction: column;
+  }
+
+  .tab-navigation {
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+  }
+
+  .criteria-header,
+  .criteria-row {
+    grid-template-columns: 1fr 80px 60px 30px;
+    font-size: 0.75rem;
+  }
+}

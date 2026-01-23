@@ -37,11 +37,12 @@ services:
     container_name: cba-server
     environment:
       NODE_ENV: production
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: ${POSTGRES_USER}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_NAME: ${POSTGRES_DB}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-false}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
       SEAT_TOKEN_EXPIRES_IN: ${SEAT_TOKEN_EXPIRES_IN:-90m}
@@ -61,21 +62,27 @@ services:
       - cba-external
 
   # =============================================================================
-  # Client (React PWA) - Static file server
-  # Will be added when client is built
+  # Client (React PWA) - Served via Nginx
   # =============================================================================
-  # client:
-  #   build:
-  #     context: ../../client
-  #     dockerfile: Dockerfile
-  #   container_name: cba-client
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - server
-  #   restart: always
-  #   networks:
-  #     - cba-external
+  client:
+    build:
+      context: ../../client
+      dockerfile: Dockerfile
+    container_name: cba-client
+    ports:
+      - "80:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    networks:
+      - cba-internal
+      - cba-external
 
 volumes:
   postgres_data:

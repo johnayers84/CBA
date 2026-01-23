@@ -1,0 +1,153 @@
+.event-teams {
+  max-width: 900px;
+}
+
+.teams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.team-number {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--primary-color);
+  min-width: 60px;
+}
+
+.team-name {
+  font-size: 1rem;
+}
+
+.team-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.team-actions .danger-button.small {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.bulk-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Barcode Modal */
+.barcode-modal {
+  max-width: 350px;
+}
+
+.barcode-preview {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.barcode-large {
+  margin: 1rem 0;
+}
+
+.team-name-large {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Print Styles */
+@media print {
+  .back-link,
+  .page-header button,
+  .team-actions,
+  .bulk-actions,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .event-teams {
+    max-width: none;
+  }
+
+  .teams-list {
+    display: none;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+  page-break-before: always;
+}
+
+.print-only h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.barcode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.barcode-card {
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+.barcode-card .barcode-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.barcode-card .barcode-visual {
+  margin: 0.5rem 0;
+}
+
+.barcode-card .barcode-label {
+  font-size: 0.875rem;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .team-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .team-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

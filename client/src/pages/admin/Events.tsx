@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { get } from '../../lib/api';
+import { getEvents } from '../../lib/services/events.service';
 import type { Event } from '../../types';
 import './AdminPages.css';
 
@@ -18,7 +18,7 @@ export function Events() {
 
   const loadEvents = async () => {
     setIsLoading(true);
-    const response = await get<Event[]>('/events');
+    const response = await getEvents();
     if (response.error) {
       setError(response.error);
     } else {
@@ -48,24 +48,26 @@ export function Events() {
         </div>
       ) : (
         <div className="data-list">
-          {events.map((event) => (
-            <Link
-              key={event.id}
-              to={`/admin/events/${event.id}`}
-              className="list-item"
-            >
-              <div className="item-main">
-                <h3>{event.name}</h3>
-                <p>{event.location || 'No location set'}</p>
-              </div>
-              <div className="item-meta">
-                <span className={`status-badge ${event.isActive ? 'active' : 'inactive'}`}>
-                  {event.isActive ? 'Active' : 'Inactive'}
-                </span>
-                <span className="date">{new Date(event.date).toLocaleDateString()}</span>
-              </div>
-            </Link>
-          ))}
+          {events
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map((event) => (
+              <Link
+                key={event.id}
+                to={`/admin/events/${event.id}`}
+                className="list-item"
+              >
+                <div className="item-main">
+                  <h3>{event.name}</h3>
+                  <p>{event.location || 'No location set'}</p>
+                </div>
+                <div className="item-meta">
+                  <span className={`status-badge ${event.isActive ? 'active' : 'inactive'}`}>
+                    {event.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                  <span className="date">{new Date(event.date).toLocaleDateString()}</span>
+                </div>
+              </Link>
+            ))}
         </div>
       )}
     </div>

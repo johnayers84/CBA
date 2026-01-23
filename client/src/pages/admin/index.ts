@@ -1,5 +1,10 @@
 export { AdminLogin } from './AdminLogin';
 export { Events } from './Events';
+export { CreateEvent } from './CreateEvent';
+export { EventDetail } from './EventDetail';
+export { EventTeams } from './EventTeams';
+export { EventTables } from './EventTables';
+export { EventSubmissions } from './EventSubmissions';
 export { Teams } from './Teams';
 export { Tables } from './Tables';
 export { Results } from './Results';
